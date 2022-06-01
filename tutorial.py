@@ -221,6 +221,7 @@ def ann_train(epoch):
     # 3. 'ann_outputs' has the size [50,10]. Each image corresponds to one row which contains 10 possibilities of being
     #    a class. So that we use 'ann_predicted' to find max possibility of each image, then compare with corresponding
     #    target
+    f.write('*****ann_train***** \n')
     for batch_idx, (inputs, targets) in enumerate(tqdm(train_dataloader)): #tqdm is a library in Python which is used for creating Progress Meters or Progress Bars
         inputs, targets = inputs.to(device), targets.to(device) # size of 'inputs': torch.Size([50, 3, 32, 32])
                                                                 # size of 'targets': torch.Size([50,1])
@@ -241,11 +242,13 @@ def ann_train(epoch):
         # print('size of targets of ann_train', targets)
         # print('size of ann_outputs', ann_outputs)
         # print('ann_predicted', ann_predicted)
-        f.write('input of ann_train (line 225): Type:' + repr(type(inputs))
+
+        f.write('batch_idx' + repr(batch_idx) + '\n')
+        f.write('input (line 225): Type:' + repr(type(inputs))
                 + 'Size' + repr(inputs.size()) + '\n')
-        f.write('target of ann_train (line 225): Type:' + repr(type(targets))
+        f.write('target (line 225): Type:' + repr(type(targets))
                 + 'Size' + repr(targets.size()) + '\n')
-        f.write('ann_output of ann_train (line 227): Type:' + repr(type(ann_outputs))
+        f.write('ann_output (line 227): Type:' + repr(type(ann_outputs))
                 + 'Size' + repr(ann_outputs.size()) + '\n')
         # --------------------------------------------------------------------------------------------------------------
 
@@ -425,6 +428,7 @@ def snn_train(epoch):
 
     # Size of 'inputs': [50,3,32,32], of 'targets': [50,1], of 'ann_outputs': [50,10], of 'snn_outputs': [50,10]
     # Every size are the same as in ANN training
+    f.write('*****snn_train***** \n')
     for batch_idx, (inputs, targets) in enumerate(tqdm(train_dataloader)):
         sum_k = 0
         cnt_k = 0
@@ -432,6 +436,18 @@ def snn_train(epoch):
         inputs, targets = inputs.to(device), targets.to(device)
         ann_outputs = net(inputs)
         ann_loss = loss_function1(ann_outputs, targets)
+
+        # --------------------------------------------------------------------------------------------------------------
+
+        f.write('batch_idx' + repr(batch_idx) + '\n')
+        f.write('input (line 429): Type:' + repr(type(inputs))
+                + 'Size' + repr(inputs.size()) + '\n')
+        f.write('target (line 429): Type:' + repr(type(targets))
+                + 'Size' + repr(targets.size()) + '\n')
+        f.write('ann_output (line 434): Type:' + repr(type(ann_outputs))
+                + 'Size' + repr(ann_outputs.size()) + '\n')
+        # --------------------------------------------------------------------------------------------------------------
+
 
         if np.isnan(ann_loss.item()) or np.isinf(ann_loss.item()):
             print('Fail to calculate ann_loss', ann_loss)
@@ -454,7 +470,10 @@ def snn_train(epoch):
         # ----------------------Run SNN training------------------------------------------------------------------------
         snn_outputs = net(inputs)
         check = (ann_outputs == snn_outputs)
-        print('Is ann_outputs = snn_outputs', check)
+        f.write('snn_output (line 471): Type:' + repr(type(snn_outputs))
+                + 'Size' + repr(snn_outputs.size()) + '\n')
+        f.write('Is ann_outputs = snn_outputs:' + repr(check.sum()) + '\n')
+
         # print('SNN TRAINING parameters\n')
         # print('size of snn_outputa', snn_outputs.size())
 
