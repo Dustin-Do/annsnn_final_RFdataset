@@ -16,6 +16,8 @@ import spikingjelly.clock_driven.neuron as neuron
 
 
 from rfml.data import build_dataset
+from torch.utils.data import Dataset, DataLoader
+
 ########################################################################################################################
 #
 # MODEL INITIALIZATION
@@ -68,8 +70,10 @@ writer = SummaryWriter(log_dir)
 #                  )
 
 
+workers = 0
 train_dataloader, val, test_dataloader, le = build_dataset(dataset_name="RML2016.10a", path='RML2016.10a_dict.pkl')
-
+train_dataloader = DataLoader(train_dataloader, batch_size=batch_size, shuffle=True, num_workers=workers, pin_memory=True)
+test_dataloader = DataLoader(test_dataloader, batch_size=batch_size, shuffle=False, num_workers=workers, pin_memory=True)
 
 f.write('train_dataloader: type: ' + repr(type(train_dataloader)) + '\n')
 f.write('test_dataloader: type: ' + repr(type(test_dataloader)) + '\n')
