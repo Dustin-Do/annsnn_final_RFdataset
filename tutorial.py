@@ -35,7 +35,7 @@ lr = 0.1    #leaning rate
 schedule = [100, 150]
 gammas = [0.1, 0.1]
 decay = 1e-4
-batch_size = 25
+batch_size = 1
 epoch = 200
 acc_tolerance = 0.1
 lam = 0.1
@@ -75,7 +75,6 @@ train_dataloader, val, test_dataloader, le = build_dataset(dataset_name="RML2016
 train_dataloader = DataLoader(train_dataloader, batch_size=batch_size, shuffle=True, num_workers=workers, pin_memory=True)
 test_dataloader = DataLoader(test_dataloader, batch_size=batch_size, shuffle=False, num_workers=workers, pin_memory=True)
 
-print(train_dataloader.shape())
 f.write('train_dataloader: type: ' + repr(type(train_dataloader)) + '\n')
 f.write('test_dataloader: type: ' + repr(type(test_dataloader)) + '\n')
 
