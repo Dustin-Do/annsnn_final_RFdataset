@@ -14,6 +14,8 @@ import spikingjelly.clock_driven.functional as functional
 import matplotlib.pyplot as plt
 import spikingjelly.clock_driven.neuron as neuron
 
+
+from rfml.data import build_dataset
 ########################################################################################################################
 #
 # MODEL INITIALIZATION
@@ -56,12 +58,18 @@ writer = SummaryWriter(log_dir)
 # -----------------------------Load data--------------------------------------------------------------------------------
 # 'load_cv_data' is function defined in 'utils.py'
 # datasets are defined: 'cifar10', 'cifar100', 'mnist', 'imagenet'
-train_dataloader, test_dataloader = load_cv_data(data_aug=False,
-                 batch_size=batch_size,
-                 workers=0,
-                 dataset=dataset,
-                 data_target_dir=datapath[dataset]
-                 )
+
+
+# train_dataloader, test_dataloader = load_cv_data(data_aug=False,
+#                  batch_size=batch_size,
+#                  workers=0,
+#                  dataset=dataset,
+#                  data_target_dir=datapath[dataset]
+#                  )
+
+
+train_dataloader, val, test_dataloader, le = build_dataset(dataset_name="RML2016.10a", path='RML2016.10a_dict.pkl')
+
 
 f.write('train_dataloader: type: ' + repr(type(train_dataloader)) + '\n')
 f.write('test_dataloader: type: ' + repr(type(test_dataloader)) + '\n')
@@ -487,8 +495,8 @@ def snn_train(epoch):
         #  (returned by ANN) and 'snn_outputs'.
         # fast_loss = dist_loss + lam * [(sum_k + last_k) / (cnt_k + 1)]
         fast_loss, dist_loss = loss_function2(predict_outputs, snn_outputs, (sum_k + last_k) / (cnt_k + 1))
-        # print('dist_loss', dist_loss)
-        # print('fass_loss', fast_loss)
+        print('dist_loss', dist_loss)
+        print('fass_loss', fast_loss)
         snn_dist_loss += dist_loss.item()
         snn_fast_loss += fast_loss.item()
         optimizer2.zero_grad()
